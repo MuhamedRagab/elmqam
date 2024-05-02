@@ -19,8 +19,9 @@ function createWindow(): void {
     }
   })
 
-  mainWindow.on('ready-to-show', () => {
+  mainWindow.on('ready-to-show', async () => {
     mainWindow.show()
+    await handleUpdate()
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -40,7 +41,7 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -61,7 +62,6 @@ app.whenReady().then(async () => {
   })
 
   createWindow()
-  await handleUpdate()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

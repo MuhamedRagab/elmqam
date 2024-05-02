@@ -1,6 +1,6 @@
 {
   "name": "elmqam",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "Mohamed Ragab",
@@ -9,13 +9,15 @@
     "type": "git",
     "url": "https://github.com/MuhamedRagab/elmqam"
   },
-  "publisher": "Mohamed Ragab",
-  "publish": {
-    "provider": "github",
-    "owner": "mohamedragab",
-    "repo": "elmqam",
-    "releaseType": "release"
-  },
+  "publisher": "MuhamedRagab",
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "MuhamedRagab",
+      "repo": "elmqam",
+      "releaseType": "release"
+    }
+  ],
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -30,7 +32,7 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
-    "deploy:win": "npm run build && electron-builder --win --publish always"
+    "deploy:win": "npm run build && electron-builder --win -p always"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",

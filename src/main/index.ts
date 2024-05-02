@@ -1,7 +1,9 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { BrowserWindow, app, autoUpdater, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
+
+import { autoUpdater, UpdateInfo } from 'electron-updater'
 
 function createWindow(): void {
   // Create the browser window.
@@ -39,14 +41,6 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // Auto update
-  autoUpdater.setFeedURL({
-    url: 'https://github.com/MuhamedRagab/elmqam'
-  })
-
-  // Check for updates
-  autoUpdater.checkForUpdates()
-
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -68,12 +62,53 @@ app.whenReady().then(() => {
 
   createWindow()
 
+  handleUpdate()
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
+
+const handleUpdate = (): void => {
+  autoUpdater.on('update-available', (info: UpdateInfo) => {
+    console.log('update-available')
+    dialog.showMessageBox({
+      type: 'info',
+      buttons: ['Ok'],
+      title: 'تحديث جديد متاح',
+      message:
+        process.platform === 'win32'
+          ? (info.releaseNotes as string)
+          : 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.',
+      detail: 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.'
+    })
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    console.log('update-downloaded')
+    dialog
+      .showMessageBox({
+        type: 'info',
+        buttons: ['Restart', 'Later'],
+        title: 'التحديث جاهز',
+        message: 'تم تحميل التحديث بنجاح، سيتم تثبيته الآن.'
+      })
+      .then((result) => {
+        if (result.response === 0) {
+          autoUpdater.quitAndInstall()
+        }
+      })
+  })
+
+  // Check for updates
+  autoUpdater.checkForUpdates()
+
+  autoUpdater.on('error', (error) => {
+    console.error('error', error)
+  })
+}
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

@@ -1,3 +1,5 @@
 provider: github
 url: https://github.com/MuhamedRagab/elmqam
 updaterCacheDirName: elmqam-updater
+owner: MuhamedRagab
+repo: elmqam

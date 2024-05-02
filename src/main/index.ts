@@ -40,7 +40,7 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -62,7 +62,7 @@ app.whenReady().then(() => {
 
   createWindow()
 
-  handleUpdate()
+  await handleUpdate()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -71,19 +71,34 @@ app.whenReady().then(() => {
   })
 })
 
-const handleUpdate = (): void => {
+const handleUpdate = async (): Promise<void> => {
+  autoUpdater.updateConfigPath = join(__dirname, 'app-update.yml')
+
+  // Check for updates
+  autoUpdater.checkForUpdates()
+
+  // Handle auto updates
+  autoUpdater.autoDownload = false
+  autoUpdater.autoInstallOnAppQuit = false
+
   autoUpdater.on('update-available', (info: UpdateInfo) => {
     console.log('update-available')
-    dialog.showMessageBox({
-      type: 'info',
-      buttons: ['Ok'],
-      title: 'تحديث جديد متاح',
-      message:
-        process.platform === 'win32'
-          ? (info.releaseNotes as string)
-          : 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.',
-      detail: 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.'
-    })
+    dialog
+      .showMessageBox({
+        type: 'info',
+        buttons: ['تحديث', 'لاحقًا'],
+        title: 'تحديث جديد متاح',
+        message:
+          process.platform === 'win32'
+            ? (info.releaseNotes as string)
+            : 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.',
+        detail: 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.'
+      })
+      .then((result) => {
+        if (result.response === 0) {
+          autoUpdater.downloadUpdate()
+        }
+      })
   })
 
   autoUpdater.on('update-downloaded', () => {
@@ -101,9 +116,6 @@ const handleUpdate = (): void => {
         }
       })
   })
-
-  // Check for updates
-  autoUpdater.checkForUpdates()
 
   autoUpdater.on('error', (error) => {
     console.error('error', error)

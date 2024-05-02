@@ -5,6 +5,17 @@
   "main": "./out/main/index.js",
   "author": "Mohamed Ragab",
   "homepage": "https://electron-vite.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuhamedRagab/elmqam"
+  },
+  "publisher": "Mohamed Ragab",
+  "publish": {
+    "provider": "github",
+    "owner": "mohamedragab",
+    "repo": "elmqam",
+    "releaseType": "release"
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
@@ -56,5 +67,43 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.3.3",
     "vite": "^5.0.12"
+  },
+  "build": {
+    "appId": "com.electron.elmqam",
+    "productName": "المقام",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*",
+      "public/**/*",
+      "src/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "./src/assets",
+        "to": "assets"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "mohamedragab",
+          "repo": "elmqam"
+        }
+      ],
+      "icon": "public/favicon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/favicon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "public/favicon.png"
+    }
   }
 }

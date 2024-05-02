@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { BrowserWindow, app, autoUpdater, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 
@@ -39,6 +39,14 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // Auto update
+  autoUpdater.setFeedURL({
+    url: 'https://github.com/MuhamedRagab/elmqam'
+  })
+
+  // Check for updates
+  autoUpdater.checkForUpdates()
+
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 

@@ -61,7 +61,6 @@ app.whenReady().then(async () => {
   })
 
   createWindow()
-
   await handleUpdate()
 
   app.on('activate', function () {
@@ -73,9 +72,6 @@ app.whenReady().then(async () => {
 
 const handleUpdate = async (): Promise<void> => {
   autoUpdater.updateConfigPath = join(__dirname, 'app-update.yml')
-
-  // Check for updates
-  autoUpdater.checkForUpdates()
 
   // Handle auto updates
   autoUpdater.autoDownload = false
@@ -120,6 +116,9 @@ const handleUpdate = async (): Promise<void> => {
   autoUpdater.on('error', (error) => {
     console.error('error', error)
   })
+
+  // Check for updates
+  autoUpdater.checkForUpdatesAndNotify()
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -1,6 +1,6 @@
 {
   "name": "elmqam",
-  "version": "1.0.6",
+  "version": "1.0.5",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "Mohamed Ragab",
@@ -14,8 +14,7 @@
     {
       "provider": "github",
       "owner": "MuhamedRagab",
-      "repo": "elmqam",
-      "releaseType": "release"
+      "repo": "elmqam"
     }
   ],
   "scripts": {
@@ -94,7 +93,7 @@
       "publish": [
         {
           "provider": "github",
-          "owner": "mohamedragab",
+          "owner": "MuhamedRagab",
           "repo": "elmqam"
         }
       ],

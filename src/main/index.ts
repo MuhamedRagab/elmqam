@@ -1,9 +1,9 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 
-import { autoUpdater, UpdateInfo } from 'electron-updater'
+import { autoUpdater } from 'electron-updater'
 
 function createWindow(): void {
   // Create the browser window.
@@ -71,24 +71,23 @@ app.whenReady().then(() => {
 })
 
 const handleUpdate = async (): Promise<void> => {
-  autoUpdater.updateConfigPath = join(__dirname, 'app-update.yml')
+  autoUpdater.updateConfigPath = join(__dirname, '..', '..', 'app-update.yml')
+  autoUpdater.forceDevUpdateConfig = true
+  autoUpdater.allowDowngrade = true
+  autoUpdater.disableWebInstaller = true
 
   // Handle auto updates
   autoUpdater.autoDownload = false
   autoUpdater.autoInstallOnAppQuit = false
 
-  autoUpdater.on('update-available', (info: UpdateInfo) => {
+  autoUpdater.on('update-available', () => {
     console.log('update-available')
     dialog
       .showMessageBox({
         type: 'info',
         buttons: ['تحديث', 'لاحقًا'],
         title: 'تحديث جديد متاح',
-        message:
-          process.platform === 'win32'
-            ? (info.releaseNotes as string)
-            : 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.',
-        detail: 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.'
+        message: 'هناك تحديث جديد متاح للتطبيق، يرجى تحميله الآن.'
       })
       .then((result) => {
         if (result.response === 0) {
@@ -118,7 +117,7 @@ const handleUpdate = async (): Promise<void> => {
   })
 
   // Check for updates
-  autoUpdater.checkForUpdatesAndNotify()
+  await autoUpdater.checkForUpdates()
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
